@@ -83,7 +83,7 @@
       var count = 0;
 
       for (var colIndex = 0; colIndex < n; colIndex++){
-        count += this.get[rowIndex][colIndex]
+        count += this.get(rowIndex)[colIndex]; // is this the correct way to refer to a square on the board?
       }
       if (count > 1) {return true;}
       return false; 
@@ -93,7 +93,7 @@
     hasAnyRowConflicts: function() {
       var n = this.get('n');
       for (var rowIndex = 0; rowIndex < n; rowIndex++){
-        if(hasRowConflictAt(rowIndex)){ return true; }
+        if(this.hasRowConflictAt(rowIndex)){ return true; }
       }
       return false; 
     },
@@ -109,7 +109,7 @@
       var count = 0;
 
       for (var rowIndex = 0; rowIndex < n; rowIndex++){
-        count += this.get[rowIndex][colIndex];
+        count += this.get(rowIndex)[colIndex]; 
       }
       if (count > 1) {return true;}
       return false; // fixme
@@ -119,7 +119,7 @@
     hasAnyColConflicts: function() {
       var n = this.get('n');
       for (var colIndex = 0; colIndex < n; colIndex++){
-        if(hasColConflictAt(colIndex)){ return true }
+        if(this.hasColConflictAt(colIndex)){ return true }
       }
       return false; // fixme
     },
@@ -135,7 +135,7 @@
       var count = 0;
       var firstColIndex = majorDiagonalColumnIndexAtFirstRow;
       for (var rowIndex = 0; rowIndex < n; rowIndex++){
-        count += this.get[rowIndex][firstColIndex + rowIndex];
+        count += this.get(rowIndex)[firstColIndex + rowIndex];
       }
       return false; // fixme
     },
@@ -144,7 +144,7 @@
     hasAnyMajorDiagonalConflicts: function() {
       var n = this.get('n');
       for (var colIndex = 0; colIndex < n; colIndex++){
-        if(hasMajorDiagonalConflictAt(colIndex)){ return true }
+        if(this.hasMajorDiagonalConflictAt(colIndex)){ return true }
       }
       return false; // fixme
     },
@@ -158,9 +158,9 @@
     hasMinorDiagonalConflictAt: function(minorDiagonalColumnIndexAtFirstRow) {
       var n = this.get('n');
       var count = 0;
-      var firstColIndex = majorDiagonalColumnIndexAtFirstRow;
+      var firstColIndex = minorDiagonalColumnIndexAtFirstRow;
       for (var rowIndex = 0; rowIndex < n; rowIndex++){
-        count += this.get[rowIndex][firstColIndex - rowIndex];
+        count += this.get(rowIndex)[firstColIndex - rowIndex];
       }
       return false; // fixme
     },
@@ -169,7 +169,7 @@
     hasAnyMinorDiagonalConflicts: function() {
       var n = this.get('n');
       for (var colIndex = 0; colIndex < n; colIndex++){
-        if(hasMinorDiagonalConflictAt(colIndex)){ return true }
+        if(this.hasMinorDiagonalConflictAt(colIndex)){ return true }
       }
       return false; // fixme
     }
