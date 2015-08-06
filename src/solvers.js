@@ -13,41 +13,42 @@
 
 // return a matrix (an array of arrays) representing a single nxn chessboard, with n rooks placed such that none of them can attack each other
 
+
 window.findNRooksSolution = function(n) {
-  var solutions = []; //fixme
-  var rookMoveStack = [];
-  var board = new Board({
-    'n': n
-  }); // A square is board.get(r)[c]?
-  var r = 0; // let's start at the very beginning
-  var c = 0; // it's a very good place to start.
-  for (r; r < n; r++) { // note we are not redefining r.
-    for (c; c < n; c++) { // nor c.
-      console.log(board.get(r), 'before');
-      board.togglePiece(r,c); // test;
-      console.log(board.get(r), 'after');
-      console.log(board.hasAnyRooksConflicts());
-      if (board.hasAnyRooksConflicts()) { // <<---- I THINK THE PROBLEM IS HERE
-        // test is bad;
-          board.togglePiece(r,c); // remove piece
-      } else {
-        rookMoveStack.push([r, c]); // let's try this one. 
-        console.log(JSON.stringify(rookMoveStack));
-        c = n; // skip to the next row. 
+  var board = new Board({'n':n});
+  var moveStack = [];
+  var r = 0;
+  var c = 0;
+  while (r < n) {
+    //debugger;
+    //stepone Place Piece
+    board.togglePiece(r, c); // toggle on;
+    //step 2 Test Piece
+    if (!board.hasAnyRooksConflicts()) {
+      //Test Succeeds - place move in stack, reset c, move to next row
+      moveStack.push([r, c]);
+      c = 0;
+      r++;
+    } else {
+      //Test fails < n times, increment c, move to next column. 
+      board.togglePiece(r,c) // toggle off
+      c++;
+      if (c === n) {
+        //Test fails = n times, previous move was bad.
+        badMove = moveStack.pop();
+        // remove previous move
+        board.togglePiece(badMove[0], badMove[1]);
+        // start working from the next square from the previous move.
+        r = badMove[0];
+        c = badMove[1] + 1;
       }
-      console.log(board.get(r), 'after');
-    } // end c loop
-    if (rookMoveStack.length < r) {
-      var badMove = rookMoveStack.pop(); // get the last move we did, that was obviously a bad move.
-      board.togglePiece(badMove[0],badMove[1]); // remove the last move piece from the board.
-      r = badMove[0]; // start the count over again
-      c = badMove[1]; // beginning from the next square over from the last bad move. 
     }
-  } // end r loop
-  console.log(board);
-  solutions.push(board);
-  console.log('Single solution for ' + n + ' rooks:', JSON.stringify(solutions[0]));
-  return solutions[0];
+  }
+  var matrix = [];
+  for (var i = 0; i < n; i++) {
+    matrix[i] = board.get(i);
+  }
+  return matrix;
 };
 
 
@@ -64,11 +65,43 @@ window.countNRooksSolutions = function(n) {
 
 // return a matrix (an array of arrays) representing a single nxn chessboard, with n queens placed such that none of them can attack each other
 window.findNQueensSolution = function(n) {
-  var solution = undefined; //fixme
-
-  console.log('Single solution for ' + n + ' queens:', JSON.stringify(solution));
-  return solution;
+  if(n === 0 || n === 2 || n === 3){return 0}// edge cases
+  var board = new Board({'n':n});
+  var moveStack = [];
+  var r = 0;
+  var c = 0;
+  while (r < n) {
+    //debugger;
+    //stepone Place Piece
+    board.togglePiece(r, c); // toggle on;
+    //step 2 Test Piece
+    if (!board.hasAnyQueensConflicts()) {
+      //Test Succeeds - place move in stack, reset c, move to next row
+      moveStack.push([r, c]);
+      c = 0;
+      r++;
+    } else {
+      //Test fails < n times, increment c, move to next column. 
+      board.togglePiece(r,c) // toggle off
+      c++;
+      if (c === n) {
+        //Test fails = n times, previous move was bad.
+        badMove = moveStack.pop();
+        // remove previous move
+        board.togglePiece(badMove[0], badMove[1]);
+        // start working from the next square from the previous move.
+        r = badMove[0];
+        c = badMove[1] + 1;
+      }
+    }
+  }
+  var matrix = [];
+  for (var i = 0; i < n; i++) {
+    matrix[i] = board.get(i);
+  }
+  return matrix;
 };
+
 
 
 // return the number of nxn chessboards that exist, with n queens placed such that none of them can attack each other
